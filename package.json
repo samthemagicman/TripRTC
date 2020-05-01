@@ -1,0 +1,17 @@
+{
+  "name": "triprtc",
+  "version": "1.0.0",
+  "description": "A WebRTC signaling server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "webrtc"
+  ],
+  "author": "Sam Salfi",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.2.5"
+  }
+}
