@@ -22,6 +22,8 @@ function createConnection(conn) {
     })
 }
 
+module.exports = function() {
+    console.log('Starting TripRTC server');
 wss.on('connection', (conn) => {
     function send(msg) { //Send a message to the client
         conn.send(JSON.stringify(msg));
@@ -138,3 +140,4 @@ wss.on('connection', (conn) => {
         delete connections[peerid];
     })
 })
+}
