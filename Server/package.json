@@ -1,6 +1,6 @@
 {
   "name": "triprtc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A WebRTC signaling server",
   "main": "server.js",
   "scripts": {
@@ -12,6 +12,8 @@
   "author": "Sam Salfi",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
     "ws": "^7.2.5"
   }
 }

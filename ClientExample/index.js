@@ -4,23 +4,21 @@ var peer;
 var room;
 
 $("#createroom").click(function() {
-    peer = new TripPeer();
-    peer.initialize().then(function() {
-        peer.createRoom().then(function(room2) {
-            room = room2;
-            console.log(room.id);
+    room = new RtcRoom();
+    room.createRoom().then(function() {
+        console.log(room.id);
 
-            room.on('disconnect', (data) => {
-                $("#messages").append("<br> Disconnected " + data.from);
-            })
+        room.on('peer-disconnect', (data) => {
+            console.error('disconnect peer');
+            $("#messages").append("<br> Disconnected " + data);
+        })
 
-            room.on('connection', (data) => {
-                $("#messages").append("<br> Connected " + data.from);
-            })
+        room.on('new-connection', (data) => {
+            $("#messages").append("<br> Connected " + data);
+        })
 
-            room.on('message', (data) => {
-                $("#messages").append("<br>" + data.from + " : " + data.message)
-            })
+        room.on('message', (data) => {
+            $("#messages").append("<br>" + data.from + " : " + data.message)
         })
     }).catch( err => {
         console.log(err);
@@ -32,38 +30,32 @@ $("#createroom").click(function() {
 }),
 
 $('#disconnect').click(function() {
-    peer.disconnect();
+    room.disconnect();
 })
 
 $('#joinroom').click(function() {
     var roomid = $("#roomId").val();
 
-    peer = new TripPeer();
+    room = new RtcRoom();
 
-    peer.initialize().then(() => {
-
-        peer.joinRoom(roomid).then(function(room2) {
-            console.log('Client Joined room')
-            room = room2;
-            console.log(room2);
-
-            room2.on('disconnect', (data) => {
-                $("#messages").append("<br> Disconnected " + data.from);
+    room.joinRoom(roomid).then(() => {
+            room.on('close', (reason) => {
+                console.error('disconnect room')
+                $("#messages").append("<br> Room closed " + reason);
             })
 
-            room2.on('connection', (data) => {
-                $("#messages").append("<br> Connected " + data.from);
+            room.on('peer-disconnect', (data) => {
+                $("#messages").append("<br> Disconnected " + data);
             })
 
-            room2.on('message', (data) => {
+            room.on('new-connection', (data) => {
+                $("#messages").append("<br> Connected " + data);
+            })
+            
+            room.on('message', (data) => {
+                console.log('recieved message')
                 $("#messages").append("<br>" + data.from + " : " + data.message)
             })
-
-        }).catch(err => {
-            console.log(err);
-        })
-
-
     }).catch(err => {
         console.log(err);
     })
