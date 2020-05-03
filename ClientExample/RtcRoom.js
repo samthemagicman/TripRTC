@@ -444,6 +444,8 @@ class RtcRoom extends Event {
                 }).catch(err => {
                     reject(err)
                 })
+            }).catch(err => {
+                reject(err);
             })
 
             
@@ -470,6 +472,7 @@ class RtcRoom extends Event {
                     parentThis.fireEvent('fatalError', err)
                     reject(err);
                 })
+
             }).catch(err => {
                 reject(err)
             })

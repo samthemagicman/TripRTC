@@ -7,6 +7,11 @@ $("#createroom").click(function() {
     room = new RtcRoom();
     room.createRoom().then(function() {
         console.log(room.id);
+        room.on('close', (reason) => {
+            console.error('disconnect room')
+            $("#messages").append("<br> Room closed " + reason);
+        })
+
 
         room.on('peer-disconnect', (data) => {
             console.error('disconnect peer');
