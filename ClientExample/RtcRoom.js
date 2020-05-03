@@ -3,7 +3,7 @@
  * Events for when a peer disconnects or errors. Then, remove the peer from the room connections list
  * Disconnect individual peers from sockets, and disconnect event once
  */
-
+`use strict`
 var config = {
     "host": 'localhost', // The server we're connecting to
     "port": 9090 // The port of the server we're connecting to
@@ -387,25 +387,29 @@ class RtcRoom extends Event {
         this._socket = socket;
         const parentThis = this;
 
-        socket.addEventListener('error', function (err) {
-            parentThis.disconnect(err.reason); // Disconnect from any rooms when the socket closes
-        })
+        const initiateMessages = () => {
+            socket.addEventListener('error', function (err) {
+                parentThis.disconnect(err.reason); // Disconnect from any rooms when the socket closes
+            })
 
-        socket.addEventListener('close', function (err) {
-            console.log(err);
-            parentThis.disconnect(err.reason); // Disconnect from any rooms when the socket closes
-        })
+            socket.addEventListener('close', function (err) {
+                parentThis.disconnect(err.reason); // Disconnect from any rooms when the socket closes
+            })
+        }
+
+        
         
         // -- END -- \\
 
         return new Promise((resolve, reject) => {
             const onError = (err) => {
                 socket.removeEventListener('error', onError);
-                reject(err.code);
+                reject('Could not connect to server');
             }
 
             const onOpen = () => {
-                socket.removeEventListener('open', onError);
+                initiateMessages();
+                socket.removeEventListener('open', onOpen);
                 resolve();
             }
 
@@ -466,6 +470,8 @@ class RtcRoom extends Event {
                     parentThis.fireEvent('fatalError', err)
                     reject(err);
                 })
+            }).catch(err => {
+                reject(err)
             })
         })
     }

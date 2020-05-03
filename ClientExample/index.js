@@ -21,7 +21,7 @@ $("#createroom").click(function() {
             $("#messages").append("<br>" + data.from + " : " + data.message)
         })
     }).catch( err => {
-        console.log(err);
+        $("#messages").append("<br> Error creating: " + err)
     })
 
     /*peer.on('roomCreated', function(roomData) {
